@@ -6,8 +6,13 @@ import 'tutorial_detail_screen.dart';
 class TutorialItem {
   final String title;
   final String? imagePath; // optional image asset path
+  final dynamic detailData; // TutorialDetailData reference
 
-  const TutorialItem({required this.title, this.imagePath});
+  const TutorialItem({
+    required this.title,
+    this.imagePath,
+    this.detailData,
+  });
 }
 
 // ─── CategoryDetailScreen ──────────────────────────────────────────────────
@@ -54,7 +59,7 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                     child: Container(
                       width: 36,
                       height: 36,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: cardColor,
                         shape: BoxShape.circle,
                       ),
@@ -66,13 +71,16 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Text(
-                    widget.categoryName,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w900,
-                      color: darkGreen,
-                      letterSpacing: 0.2,
+                  Expanded(
+                    child: Text(
+                      widget.categoryName,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w900,
+                        color: darkGreen,
+                        letterSpacing: 0.2,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
@@ -94,7 +102,13 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
       ),
       bottomNavigationBar: FloatingBottomNav(
         currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
+        onTap: (index) {
+          if (index == 1) {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          } else {
+            setState(() => _currentIndex = index);
+          }
+        },
       ),
     );
   }
@@ -109,13 +123,14 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
               categoryName: widget.categoryName,
               tutorialTitle: item.title,
               imagePath: item.imagePath,
+              detailData: item.detailData,
             ),
           ),
         );
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
-        height: 200,
+        height: 180,
         decoration: BoxDecoration(
           color: cardColor,
           borderRadius: BorderRadius.circular(20),
@@ -131,7 +146,7 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
           borderRadius: BorderRadius.circular(20),
           child: Column(
             children: [
-              // Upper image area
+              // Upper image / graphic area
               Expanded(
                 child: item.imagePath != null
                     ? Image.asset(
@@ -141,6 +156,13 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                       )
                     : Container(
                         color: cardColor,
+                        child: Center(
+                          child: Icon(
+                            Icons.auto_stories_rounded,
+                            size: 48,
+                            color: darkGreen.withValues(alpha: 0.4),
+                          ),
+                        ),
                       ),
               ),
 
@@ -152,7 +174,7 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                 child: Text(
                   item.title,
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: FontWeight.w900,
                     color: Color(0xFF1A2E10),
                     letterSpacing: 0.1,
@@ -165,6 +187,4 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
       ),
     );
   }
-
-
 }

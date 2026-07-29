@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import '../data/module_data.dart';
 import '../widgets/floating_bottom_nav.dart';
 import 'category_detail_screen.dart';
 import 'pesanan_screen.dart';
 import 'cart_screen.dart';
+import 'toko_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   final String username;
@@ -74,6 +76,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => const PesananScreen(),
+              ),
+            );
+          } else if (index == 2) {
+            // Navigate to Toko screen
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const TokoScreen(),
               ),
             );
           } else {
@@ -281,11 +290,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   List<TutorialItem> _defaultTutorials(String categoryName) {
-    return [
-      TutorialItem(title: 'Tutorkan'),
-      TutorialItem(title: 'Tutorkan'),
-      TutorialItem(title: 'Tutorkan'),
-    ];
+    return ModuleData.getTutorialItems(categoryName);
   }
 
   Widget _buildCategoryCell(_CategoryItem item) {
